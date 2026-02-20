@@ -10,21 +10,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-/**
- * Attack Chain Visualization Engine.
- *
- * Analyzes discovered vulnerabilities and identifies how they can be
- * chained together into multi-step attack paths. Each chain represents
- * a realistic exploit scenario where one weakness enables the next.
- *
- * Chain detection rules are based on well-known attack patterns:
- * - CORS + XSS → Session Hijacking → Data Exfiltration
- * - Information Disclosure → SQL Injection → Data Exfiltration
- * - Missing Headers + XSS → Clickjacking + Session Theft
- * - Open Redirect + XSS → Credential Phishing
- * - SSL Weakness + CORS → Man-in-the-Middle → Data Theft
- * - etc.
- */
+
 @Slf4j
 @Component
 public class AttackChainEngine {
@@ -32,9 +18,7 @@ public class AttackChainEngine {
     private final AtomicInteger nodeCounter = new AtomicInteger(0);
     private final AtomicInteger chainCounter = new AtomicInteger(0);
 
-    /**
-     * Analyze a set of vulnerabilities and produce a full attack chain visualization.
-     */
+
     public AttackChainVisualization analyze(String targetUrl, List<Vulnerability> vulnerabilities) {
         log.info("Attack Chain Engine: analyzing {} vulnerabilities for {}", vulnerabilities.size(), targetUrl);
 
@@ -125,9 +109,6 @@ public class AttackChainEngine {
 
     // ===================== CHAIN BUILDERS =====================
 
-    /**
-     * Chain: CORS Misconfiguration + XSS → Session Hijacking → Data Exfiltration
-     */
     private List<AttackChain> buildCorsXssSessionHijackChain(Map<VulnerabilityCategory, List<Vulnerability>> classified) {
         List<AttackChain> chains = new ArrayList<>();
         List<Vulnerability> cors = classified.getOrDefault(VulnerabilityCategory.CORS_MISCONFIGURATION, List.of());
@@ -166,9 +147,7 @@ public class AttackChainEngine {
         return chains;
     }
 
-    /**
-     * Chain: Information Disclosure → SQL Injection → Data Exfiltration
-     */
+
     private List<AttackChain> buildInfoDisclosureSqlInjectionChain(Map<VulnerabilityCategory, List<Vulnerability>> classified) {
         List<AttackChain> chains = new ArrayList<>();
         List<Vulnerability> info = classified.getOrDefault(VulnerabilityCategory.INFORMATION_DISCLOSURE, List.of());
@@ -223,9 +202,6 @@ public class AttackChainEngine {
         return chains;
     }
 
-    /**
-     * Chain: Missing Security Headers + XSS → Clickjacking + Session Theft
-     */
     private List<AttackChain> buildMissingHeadersXssClickjackChain(Map<VulnerabilityCategory, List<Vulnerability>> classified) {
         List<AttackChain> chains = new ArrayList<>();
         List<Vulnerability> headers = classified.getOrDefault(VulnerabilityCategory.MISSING_HEADER, List.of());
@@ -291,9 +267,6 @@ public class AttackChainEngine {
         return chains;
     }
 
-    /**
-     * Chain: Open Redirect + XSS → Credential Phishing
-     */
     private List<AttackChain> buildOpenRedirectPhishingChain(Map<VulnerabilityCategory, List<Vulnerability>> classified) {
         List<AttackChain> chains = new ArrayList<>();
         List<Vulnerability> redirects = classified.getOrDefault(VulnerabilityCategory.OPEN_REDIRECT, List.of());
@@ -353,9 +326,6 @@ public class AttackChainEngine {
         return chains;
     }
 
-    /**
-     * Chain: SSL/TLS Weakness + CORS → Man-in-the-Middle → Data Interception
-     */
     private List<AttackChain> buildSslMitmChain(Map<VulnerabilityCategory, List<Vulnerability>> classified) {
         List<AttackChain> chains = new ArrayList<>();
         List<Vulnerability> ssl = classified.getOrDefault(VulnerabilityCategory.SSL_TLS_WEAKNESS, List.of());
@@ -417,9 +387,7 @@ public class AttackChainEngine {
         return chains;
     }
 
-    /**
-     * Chain: XSS alone → Account Takeover (when no other vulns to chain with)
-     */
+
     private List<AttackChain> buildXssToAccountTakeoverChain(Map<VulnerabilityCategory, List<Vulnerability>> classified) {
         List<AttackChain> chains = new ArrayList<>();
         List<Vulnerability> xss = classified.getOrDefault(VulnerabilityCategory.XSS, List.of());

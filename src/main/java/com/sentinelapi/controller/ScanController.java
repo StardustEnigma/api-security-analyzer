@@ -19,37 +19,19 @@ public class ScanController {
     private final ScanService scanService;
     private final GraphExportService graphExportService;
 
-    /**
-     * Full security scan including attack chain visualization.
-     */
     @PostMapping("/scan")
     public ResponseEntity<VulnerabilityReport> scan(@Valid @RequestBody ScanRequest request) {
         VulnerabilityReport report = scanService.scan(request.getTargetUrl());
         return ResponseEntity.ok(report);
     }
 
-    /**
-     * Scan and return ONLY the attack chain visualization.
-     * Useful when the frontend only needs the graph data.
-     */
     @PostMapping("/scan/attack-chains")
     public ResponseEntity<AttackChainVisualization> attackChains(@Valid @RequestBody ScanRequest request) {
         VulnerabilityReport report = scanService.scan(request.getTargetUrl());
         return ResponseEntity.ok(report.getAttackChainVisualization());
     }
 
-    /**
-     * Scan and return the attack graph in React Flow-compatible format.
-     *
-     * Response contains:
-     * - nodes[] → pass directly to {@code <ReactFlow nodes={nodes} />}
-     * - edges[] → pass directly to {@code <ReactFlow edges={edges} />}
-     * - layout  → graph dimensions and spacing hints
-     * - severityColorMap → severity-to-hex color mapping for legends
-     * - nodeTypeLegend   → node type descriptions
-     * - stats            → summary statistics for dashboard cards
-     * - chainSummaries[] → per-chain info with nodeIds/edgeIds for highlight on hover
-     */
+
     @PostMapping("/scan/export-graph")
     public ResponseEntity<GraphExportResponse> exportGraph(@Valid @RequestBody ScanRequest request) {
         VulnerabilityReport report = scanService.scan(request.getTargetUrl());
